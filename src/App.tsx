@@ -15,7 +15,7 @@ function App() {
       : [];
   });
   const [filter, setFilter] = useState<FilterType>('all');
-  const [isDarkMode, setIsDarkMode] = useState(false); // ダークモードの状態
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
     localStorage.setItem('todos', JSON.stringify(todos));
@@ -88,16 +88,18 @@ function App() {
 
   return (
     <div
-      className={`min-h-screen py-8 px-4 transition-colors ${
+      className={`min-h-screen py-8 px-4 transition-colors duration-500 ${
         isDarkMode
-          ? 'bg-gray-900 text-gray-100'
+          ? 'bg-gray-800 text-gray-200'
           : 'bg-gradient-to-br from-purple-500 to-pink-500 text-gray-800'
       }`}
     >
       <div className="max-w-2xl mx-auto">
         <div
-          className={`rounded-2xl shadow-xl p-6 md:p-8 ${
-            isDarkMode ? 'bg-gray-800 text-gray-100' : 'bg-white/90 text-gray-800'
+          className={`rounded-2xl shadow-xl p-6 md:p-8 transition-colors duration-500 ${
+            isDarkMode
+              ? 'bg-gray-700 text-gray-100'
+              : 'bg-white/90 text-gray-800'
           }`}
         >
           <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center">
@@ -105,9 +107,9 @@ function App() {
           </h1>
           <button
             onClick={toggleDarkMode}
-            className={`mb-4 px-4 py-2 rounded-lg ${
+            className={`mb-4 px-4 py-2 rounded-lg transition-colors duration-500 ${
               isDarkMode
-                ? 'bg-gray-700 hover:bg-gray-600 text-gray-200'
+                ? 'bg-blue-500 hover:bg-blue-600 text-gray-100'
                 : 'bg-gray-300 hover:bg-gray-400 text-gray-800'
             }`}
           >
