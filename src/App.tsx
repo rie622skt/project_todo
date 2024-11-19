@@ -13,6 +13,7 @@ function App() {
     }) : [];
   });
   const [filter, setFilter] = useState<FilterType>('all');
+  const [isGrayBackground, setIsGrayBackground] = useState(false); // 背景色の状態管理
 
   useEffect(() => {
     localStorage.setItem('todos', JSON.stringify(todos));
@@ -76,13 +77,29 @@ function App() {
     });
   };
 
+  const toggleBackgroundColor = () => {
+    setIsGrayBackground(prev => !prev);
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-500 to-pink-500 py-8 px-4">
+    <div
+      className={`min-h-screen py-8 px-4 transition-colors ${
+        isGrayBackground
+          ? 'bg-gray-700 text-gray-100'
+          : 'bg-gradient-to-br from-purple-500 to-pink-500 text-gray-800'
+      }`}
+    >
       <div className="max-w-2xl mx-auto">
         <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-6 md:p-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-8 text-center">
+          <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center">
             Todo リスト
           </h1>
+          <button
+            onClick={toggleBackgroundColor}
+            className="mb-4 px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-400 text-gray-800"
+          >
+            背景色を切り替え
+          </button>
           <AddTodo onAdd={addTodo} />
           <TodoFilters
             currentFilter={filter}
@@ -96,7 +113,7 @@ function App() {
             onReorder={handleReorder}
           />
           {filteredTodos.length === 0 && (
-            <div className="text-center text-gray-500 mt-8">
+            <div className="text-center mt-8">
               {filter === 'all' ? (
                 <p>タスクを追加してください 🚀</p>
               ) : filter === 'active' ? (
