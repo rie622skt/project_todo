@@ -7,13 +7,15 @@ import { Todo, FilterType } from './types';
 function App() {
   const [todos, setTodos] = useState<Todo[]>(() => {
     const saved = localStorage.getItem('todos');
-    return saved ? JSON.parse(saved, (key, value) => {
-      if (key === 'createdAt') return new Date(value);
-      return value;
-    }) : [];
+    return saved
+      ? JSON.parse(saved, (key, value) => {
+          if (key === 'createdAt') return new Date(value);
+          return value;
+        })
+      : [];
   });
   const [filter, setFilter] = useState<FilterType>('all');
-  const [isGrayBackground, setIsGrayBackground] = useState(false); // 背景色の状態管理
+  const [isDarkMode, setIsDarkMode] = useState(false); // ダークモードの状態
 
   useEffect(() => {
     localStorage.setItem('todos', JSON.stringify(todos));
@@ -30,11 +32,14 @@ function App() {
     }
   }, [todos, filter]);
 
-  const todoCount = useMemo(() => ({
-    all: todos.length,
-    active: todos.filter(todo => !todo.completed).length,
-    completed: todos.filter(todo => todo.completed).length,
-  }), [todos]);
+  const todoCount = useMemo(
+    () => ({
+      all: todos.length,
+      active: todos.filter(todo => !todo.completed).length,
+      completed: todos.filter(todo => todo.completed).length,
+    }),
+    [todos]
+  );
 
   const addTodo = (text: string) => {
     if (text.trim()) {
@@ -45,21 +50,21 @@ function App() {
           text,
           completed: false,
           createdAt: new Date(),
-        }
+        },
       ]);
     }
   };
 
   const toggleTodo = (id: number) => {
     setTodos(prevTodos =>
-      prevTodos.map((todo) =>
+      prevTodos.map(todo =>
         todo.id === id ? { ...todo, completed: !todo.completed } : todo
       )
     );
   };
 
   const deleteTodo = (id: number) => {
-    setTodos(prevTodos => prevTodos.filter((todo) => todo.id !== id));
+    setTodos(prevTodos => prevTodos.filter(todo => todo.id !== id));
   };
 
   const handleReorder = (activeId: number, overId: number) => {
@@ -77,28 +82,36 @@ function App() {
     });
   };
 
-  const toggleBackgroundColor = () => {
-    setIsGrayBackground(prev => !prev);
+  const toggleDarkMode = () => {
+    setIsDarkMode(prev => !prev);
   };
 
   return (
     <div
       className={`min-h-screen py-8 px-4 transition-colors ${
-        isGrayBackground
-          ? 'bg-gray-700 text-gray-100'
+        isDarkMode
+          ? 'bg-gray-900 text-gray-100'
           : 'bg-gradient-to-br from-purple-500 to-pink-500 text-gray-800'
       }`}
     >
       <div className="max-w-2xl mx-auto">
-        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-6 md:p-8">
+        <div
+          className={`rounded-2xl shadow-xl p-6 md:p-8 ${
+            isDarkMode ? 'bg-gray-800 text-gray-100' : 'bg-white/90 text-gray-800'
+          }`}
+        >
           <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center">
             Todo リスト
           </h1>
           <button
-            onClick={toggleBackgroundColor}
-            className="mb-4 px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-400 text-gray-800"
+            onClick={toggleDarkMode}
+            className={`mb-4 px-4 py-2 rounded-lg ${
+              isDarkMode
+                ? 'bg-gray-700 hover:bg-gray-600 text-gray-200'
+                : 'bg-gray-300 hover:bg-gray-400 text-gray-800'
+            }`}
           >
-            背景色を切り替え
+            {isDarkMode ? 'ライトモードに切り替え' : 'ダークモードに切り替え'}
           </button>
           <AddTodo onAdd={addTodo} />
           <TodoFilters
