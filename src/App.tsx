@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { FaMoon, FaSun } from 'react-icons/fa';
 import TodoList from './components/TodoList';
 import AddTodo from './components/AddTodo';
 import TodoFilters from './components/TodoFilters';
@@ -99,11 +100,20 @@ function App() {
           ? 'bg-gray-900 text-gray-200'
           : 'bg-gradient-to-br from-purple-500 to-pink-500 text-gray-800'
       }`}
-      style={{
-        backgroundColor: isDarkMode ? '#1a202c' : 'linear-gradient(to br, #a855f7, #ec4899)',
-      }}
     >
-      <div className="max-w-2xl mx-auto">
+      <div className="relative max-w-2xl mx-auto">
+        <button
+          onClick={toggleDarkMode}
+          className={`absolute top-4 right-4 p-2 rounded-full transition-colors duration-500 ${
+            isDarkMode
+              ? 'bg-gray-700 hover:bg-gray-600 text-yellow-300'
+              : 'bg-gray-300 hover:bg-gray-400 text-gray-800'
+          }`}
+          aria-label="Toggle Dark Mode"
+        >
+          {isDarkMode ? <FaSun size={20} /> : <FaMoon size={20} />}
+        </button>
+
         <div
           className={`rounded-2xl shadow-xl p-6 md:p-8 transition-colors duration-500 ${
             isDarkMode
@@ -114,16 +124,6 @@ function App() {
           <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center">
             Todo リスト
           </h1>
-          <button
-            onClick={toggleDarkMode}
-            className={`mb-4 px-4 py-2 rounded-lg transition-colors duration-500 ${
-              isDarkMode
-                ? 'bg-blue-600 hover:bg-blue-500 text-gray-200'
-                : 'bg-gray-300 hover:bg-gray-400 text-gray-800'
-            }`}
-          >
-            {isDarkMode ? 'ライトモードに切り替え' : 'ダークモードに切り替え'}
-          </button>
           <AddTodo onAdd={addTodo} isDarkMode={isDarkMode} />
           <TodoFilters
             currentFilter={filter}
