@@ -15,11 +15,17 @@ function App() {
       : [];
   });
   const [filter, setFilter] = useState<FilterType>('all');
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(
+    () => localStorage.getItem('isDarkMode') === 'true'
+  );
 
   useEffect(() => {
     localStorage.setItem('todos', JSON.stringify(todos));
   }, [todos]);
+
+  useEffect(() => {
+    localStorage.setItem('isDarkMode', String(isDarkMode));
+  }, [isDarkMode]);
 
   const filteredTodos = useMemo(() => {
     switch (filter) {
@@ -90,15 +96,18 @@ function App() {
     <div
       className={`min-h-screen py-8 px-4 transition-colors duration-500 ${
         isDarkMode
-          ? 'bg-gray-800 text-gray-200'
+          ? 'bg-gray-900 text-gray-200'
           : 'bg-gradient-to-br from-purple-500 to-pink-500 text-gray-800'
       }`}
+      style={{
+        backgroundColor: isDarkMode ? '#1a202c' : 'linear-gradient(to br, #a855f7, #ec4899)',
+      }}
     >
       <div className="max-w-2xl mx-auto">
         <div
           className={`rounded-2xl shadow-xl p-6 md:p-8 transition-colors duration-500 ${
             isDarkMode
-              ? 'bg-gray-700 text-gray-100'
+              ? 'bg-gray-800 text-gray-100'
               : 'bg-white/90 text-gray-800'
           }`}
         >
@@ -109,23 +118,25 @@ function App() {
             onClick={toggleDarkMode}
             className={`mb-4 px-4 py-2 rounded-lg transition-colors duration-500 ${
               isDarkMode
-                ? 'bg-blue-500 hover:bg-blue-600 text-gray-100'
+                ? 'bg-blue-600 hover:bg-blue-500 text-gray-200'
                 : 'bg-gray-300 hover:bg-gray-400 text-gray-800'
             }`}
           >
             {isDarkMode ? 'ライトモードに切り替え' : 'ダークモードに切り替え'}
           </button>
-          <AddTodo onAdd={addTodo} />
+          <AddTodo onAdd={addTodo} isDarkMode={isDarkMode} />
           <TodoFilters
             currentFilter={filter}
             onFilterChange={setFilter}
             todoCount={todoCount}
+            isDarkMode={isDarkMode}
           />
           <TodoList
             todos={filteredTodos}
             onToggle={toggleTodo}
             onDelete={deleteTodo}
             onReorder={handleReorder}
+            isDarkMode={isDarkMode}
           />
           {filteredTodos.length === 0 && (
             <div className="text-center mt-8">
